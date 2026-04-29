@@ -1,3 +1,3 @@
-name: PhyberApex Home Assistant add-on repository
-url: 'https://github.com/PhyberApex/home-assistant-add-on-repo'
-maintainer: Janis Walliser <phyberapex@phyberapex.de>
+name: Fork of PhyberApex Home Assistant add-on repository
+url: 'https://github.com/philip-arbaugh/home-assistant-add-on-repo/'
+maintainer: Forked from PhyberApex
