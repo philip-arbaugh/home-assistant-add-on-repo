@@ -1,7 +1,7 @@
 name: "OLED System Info Display"
-description: "Displays system information on SSD1306 OLED screen with GPIO button control for reboot/shutdown"
-version: "2.0.1"
-slug: "oled_system_info"
+description: "Displays system information on SSD1306 OLED screen"
+version: "2.0.2"
+slug: "oled_system_info_no_button"
 init: false
 devices:
   - /dev/i2c-1
@@ -12,11 +12,10 @@ privileged:
   - SYS_RAWIO
   - SYS_ADMIN
 options:
-  board_type: "RASPBERRY_PI_4B"
-  chip_type: "BCM2711"
+  board_type: "RASPBERRY_PI_5"
+  chip_type: "BCM2712"
 schema:
   board_type: "list(RASPBERRY_PI_ZERO|RASPBERRY_PI_ZERO_W|RASPBERRY_PI_2B|RASPBERRY_PI_3B|RASPBERRY_PI_3B_PLUS|RASPBERRY_PI_3A_PLUS|RASPBERRY_PI_4B|RASPBERRY_PI_5|RASPBERRY_PI_CM4)"
   chip_type: "list(BCM2835|BCM2836|BCM2837|BCM2711|BCM2712)"
 apparmor: false
 hassio_api: true
-image: "ghcr.io/phyberapex/{arch}-oled-system-info"
