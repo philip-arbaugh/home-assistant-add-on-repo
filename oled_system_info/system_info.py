@@ -157,10 +157,10 @@ def get_system_info():
 def main():
     log("Initializing OLED System Info Display")
     
-    # GPIO configuration
+    # GPIO configuration (LED only, no button)
     LED = 23
     
-    log(f"Configuring GPIO - Button: GPIO{INFO_BTN}, LED: GPIO{LED}")
+    log(f"Configuring GPIO - LED: GPIO{LED}")
     chip = gpiod.Chip('gpiochip0')
     led_line = chip.get_line(LED)
     led_line.request(consumer="oled-display", type=gpiod.LINE_REQ_DIR_OUT, default_vals=[0])
@@ -180,17 +180,9 @@ def main():
     draw = ImageDraw.Draw(image)
     font = ImageFont.load_default()
     
-    # Display constants
     padding = -2
     x = 0
     top = padding
-    
-    # State variables
-    disp_timer = 0
-    menu_timer = 0
-    menu_state = 0
-    
-    DISP_TIMEOUT = 0
     
     # Turn on LED
     led_line.set_value(1)
@@ -212,37 +204,15 @@ def main():
         while True:
             draw.rectangle((0, 0, disp.width, disp.height), outline=0, fill=0)
             
-            button_state = btn_line.get_value()
+            hostname, ip, cpu, mem = get_system_info()
+            draw.text((x, top),    f"NAME: {hostname}", font=font, fill=255)
+            draw.text((x, top+12), f"IP  : {ip}", font=font, fill=255)
+            draw.text((x, top+24), f"CPU : {cpu}% | MEM: {mem}%", font=font, fill=255)
             
-            if button_state != last_button_state:
-                if button_state == 0:
-                    log("BUTTON: Pressed")
-                else:
-                    log(f"BUTTON: Released (menu_timer={menu_timer}, menu_state={menu_state})")
-                last_button_state = button_state
+            disp.image(image)
+            disp.show()
             
-            if button_state == 0:
-                if menu_timer == 0:
-                    log("Display activated")
-                
-                disp_timer = DISP_TIMEOUT
-                menu_timer += 1
-            elif disp_timer == 0:
-                disp.image(image)
-                disp.show()
-            
-            if disp_timer == 0:
-                if menu_state == 0:
-                    hostname, ip, cpu, mem = get_system_info()
-                    draw.text((x, top),    f"NAME: {hostname}", font=font, fill=255)
-                    draw.text((x, top+12), f"IP  : {ip}", font=font, fill=255)
-                    draw.text((x, top+24), f"CPU : {cpu}% | MEM: {mem}%", font=font, fill=255)
-                    disp_timer -= 1
-                
-                disp.image(image)
-                disp.show()
-            
-            time.sleep(1)
+            time.sleep(2)
     
     except KeyboardInterrupt:
         log("Received keyboard interrupt")
@@ -252,9 +222,7 @@ def main():
     finally:
         log("Cleaning up GPIO resources")
         led_line.release()
-        btn_line.release()
         log("Shutdown complete")
-
 
 if __name__ == "__main__":
     main()
