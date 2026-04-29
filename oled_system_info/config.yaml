@@ -1,6 +1,6 @@
 name: "OLED System Info Display"
 description: "Displays system information on SSD1306 OLED screen"
-version: "2.0.2"
+version: "2.0.3"
 slug: "oled_system_info_no_button"
 init: false
 devices:
